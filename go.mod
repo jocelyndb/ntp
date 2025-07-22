@@ -1,4 +1,4 @@
-module github.com/beevik/ntp
+module github.com/jocelyndb/ntp
 
 go 1.17
 
