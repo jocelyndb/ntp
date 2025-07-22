@@ -492,7 +492,8 @@ func getTime(address string, opt *QueryOptions) (*header, ntpTime, error) {
 			return dialWrapper(la, ra, opt.Dial)
 		}
 	}
-	if opt.Dialer == nil {
+	var useDefaultDialer bool = opt.Dialer == nil
+	if useDefaultDialer {
 		opt.Dialer = defaultDialer
 	}
 
@@ -508,7 +509,11 @@ func getTime(address string, opt *QueryOptions) (*header, ntpTime, error) {
 	if err != nil {
 		return nil, 0, err
 	}
-	defer con.Close()
+
+	// Only close connection if dialer not overridden
+	if useDefaultDialer {
+		defer con.Close()
+	}
 
 	// Set a TTL for the packet if requested.
 	if opt.TTL != 0 {
